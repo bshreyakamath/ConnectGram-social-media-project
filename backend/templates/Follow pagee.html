@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find Friends | Connectgram</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #b3a6cf; display: flex; flex-direction: column; align-items: center; padding-top: 50px; margin: 0; }
+        .search-container { background: white; width: 400px; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .user-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        button { padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; min-width: 100px; }
+        .btn-follow { background-color: #007BFF; color: white; }
+        .btn-unfollow { background-color: #e4e6eb; color: #050505; }
+        .back-nav { margin-bottom: 20px; }
+        .back-nav a { text-decoration: none; color: #007BFF; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="back-nav">
+        <a href="/dashboard.html">← Back to Dashboard</a>
+    </div>
+    <div class="search-container">
+        <h2>Search Users</h2>
+        <div id="users-list">
+            {% for u in users %}
+                <div class="user-row">
+                    <span>{{ u.username }}</span>
+                    <button onclick="toggleFollow(this, {{ u.id }})" 
+                            class="{{ 'btn-unfollow' if u.is_following else 'btn-follow' }}">
+                        {{ 'Unfollow' if u.is_following else 'Follow' }}
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function toggleFollow(btn, targetId) {
+            fetch('/toggle_follow/' + targetId, { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    btn.innerText = (data.action === "followed") ? "Unfollow" : "Follow";
+                    btn.className = (data.action === "followed") ? "btn-unfollow" : "btn-follow";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

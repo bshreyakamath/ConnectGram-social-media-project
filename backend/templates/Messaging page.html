@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Messages | ConnectGram</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; margin: 0; background: #f0f2f5; }
+        .user-list { width: 30%; border-right: 1px solid #ddd; padding: 20px; background: white; }
+        .chat-area { width: 70%; display: flex; flex-direction: column; background: #e5ddd5; }
+        #chat-target { padding: 15px; background: #075e54; color: white; margin: 0; }
+        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
+        .msg { margin-bottom: 10px; padding: 10px; border-radius: 8px; max-width: 60%; font-size: 14px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .my-msg { background: #dcf8c6; align-self: flex-end; }
+        .their-msg { background: white; align-self: flex-start; }
+        .input-area { padding: 15px; background: #f0f0f0; display: flex; gap: 10px; }
+        #msg-input { flex: 1; padding: 10px; border: none; border-radius: 20px; outline: none; }
+        .send-btn { background: #075e54; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; }
+        .user-btn { width: 100%; text-align: left; padding: 10px; margin-bottom: 5px; border: none; background: #fff; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .user-btn:hover { background: #e9edef; }
+    </style>
+</head>
+<body>
+    <div class="user-list">
+        <h3>Chats</h3>
+        {% for u in users %}
+            <button class="user-btn" onclick="openChat({{ u.id }}, '{{ u.username }}')">
+                <strong>@{{ u.username }}</strong>
+            </button>
+        {% endfor %}
+        <hr>
+        <a href="/dashboard.html" style="text-decoration:none; color: #666;">← Dashboard</a>
+    </div>
+
+    <div class="chat-area">
+        <h3 id="chat-target">Select a user to start chatting</h3>
+        <div id="chat-box"></div>
+        <div class="input-area">
+            <input type="text" id="msg-input" placeholder="Type a message..." onkeypress="handleKey(event)">
+            <button class="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let currentTargetId = null;
+        const myId = Number("{{ session['user_id'] }}");        
+        function openChat(id, name) {
+            currentTargetId = id;
+            document.getElementById('chat-target').innerText = "Chatting with @" + name;
+            loadMessages();
+        }
+
+        function loadMessages() {
+            if(!currentTargetId) return;
+            fetch(`/get_messages/${currentTargetId}`)
+                .then(r => r.json())
+                .then(data => {
+                    const box = document.getElementById('chat-box');
+                    box.innerHTML = data.map(m => {
+                        const type = m.sender_id === myId ? 'my-msg' : 'their-msg';
+                        return `<div class="msg ${type}">${m.content}</div>`;
+                    }).join('');
+                    box.scrollTop = box.scrollHeight;
+                });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('msg-input');
+            if(!input.value || !currentTargetId) return;
+            fetch('/send_message', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ receiver_id: currentTargetId, content: input.value })
+            }).then(() => {
+                input.value = '';
+                loadMessages();
+            });
+        }
+
+        function handleKey(e) { if(e.key === 'Enter') sendMessage(); }
+        setInterval(loadMessages, 3000);
+    </script>
+</body>
+</html>

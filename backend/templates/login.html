@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ConnectGram | Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e3f2fd; /* Light blue background */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        h1 { color: #333; margin-bottom: 20px; }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4865fa;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover { background-color: #0000b3; }
+
+        .signup-link { margin-top: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>ConnectGram</h1>
+        
+        <img src="/static/logo.png" width="120" alt="Logo" style="margin-bottom: 20px;">
+        
+        <p><b>LOGIN</b></p>
+        
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <p><b>PASSWORD</b></p>
+            <input type="password" name="password" placeholder="Password" required>
+            <br><br>
+            <button type="submit">SUBMIT</button>
+        </form>
+        
+        <p class="signup-link">
+    Don't have an account? <a href="{{ url_for('show_signup') }}" style="color: #007BFF; text-decoration: none;">Sign Up here</a>
+</p>
+        </p>
+    </div>
+
+</body>
+</html>

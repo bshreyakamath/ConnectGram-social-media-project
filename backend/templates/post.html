@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Post | Connectgram</title>
+    <style>
+        body { background: #94c3b1; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 12px; width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #007BFF; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 style="text-align: center;">New Post</h2>
+        <form action="/add_post" method="POST">
+            <textarea name="caption" placeholder="What's on your mind?" required></textarea>
+            <input type="text" name="image_url" placeholder="Paste Image URL here" required>
+            <button type="submit">Post to Feed</button>
+        </form>
+        <p style="text-align: center;"><a href="/dashboard.html">Cancel</a></p>
+    </div>
+</body>
+</html>

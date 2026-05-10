@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ConnectGram | Feed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body { background: #fafafa; font-family: sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .post-card { background: white; border: 1px solid #dbdbdb; border-radius: 3px; width: 100%; max-width: 500px; margin-bottom: 30px; }
+        .post-header { padding: 14px; font-weight: bold; }
+        .post-img { width: 100%; display: block; }
+        .post-info { padding: 15px; }
+        .btn-action { background: none; border: none; font-size: 20px; cursor: pointer; color: #262626; padding: 0; margin-right: 10px; }
+        .likes-count { font-weight: bold; display: block; margin: 5px 0; }
+        .comment-list { margin-top: 10px; font-size: 14px; border-top: 1px solid #efefef; padding-top: 10px; }
+        .comment-item { margin-bottom: 5px; }
+        .comment-form { border-top: 1px solid #efefef; display: flex; padding: 10px; }
+        .comment-form input { flex: 1; border: none; outline: none; }
+        .comment-form button { background: none; border: none; color: #0095f6; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>ConnectGram Feed</h2>
+    <p><a href="/dashboard.html">Return to Dashboard</a></p>
+
+    {% for post in posts %}
+    <div class="post-card">
+        <div class="post-header">@{{ post.username }}</div>
+        
+        <img src="{{ post.image_url }}" class="post-img" alt="Post content">
+        
+        <div class="post-info">
+            <div class="actions">
+                <form action="/like_post/{{ post.id }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn-action">
+                        <i class="fa fa-heart-o"></i>
+                    </button>
+                </form>
+                <i class="fa fa-comment-o btn-action"></i>
+            </div>
+
+            <span class="likes-count">{{ post.like_count }} likes</span>
+            
+            <p><strong>{{ post.username }}</strong> {{ post.caption }}</p>
+
+            <div class="comment-list">
+                {% for comment in comments %}
+                    {% if comment.post_id == post.id %}
+                    <div class="comment-item">
+                        <strong>{{ comment.username }}</strong> {{ comment.content }}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <form action="/add_comment/{{ post.id }}" method="POST" class="comment-form">
+            <input type="text" name="content" placeholder="Add a comment..." required>
+            <button type="submit">Post</button>
+        </form>
+    </div>
+    {% endfor %}
+
+</body>
+</html>
